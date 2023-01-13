@@ -8,6 +8,8 @@ packages = [{include = "python_music_tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pyaudio = "^0.2.13"
+numpy = "^1.24.1"
 
 
 [build-system]

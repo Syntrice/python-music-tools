@@ -1,29 +1,14 @@
-import time
-import pyaudio as pa
+import math
 import numpy as np
-from python_music_tools.synthesis import waves
+import itertools
 
-# Parameters
-sample_rate = 44100
-
-# Initialize Pyaudio
-p = pa.PyAudio()
-
-wave = waves.sine_wave(1,440,1)
-
-output_bytes = wave.tobytes()
-
-# Open stream
-stream = p.open(format=pa.paFloat32,
-                channels=1,
-                rate=sample_rate,
-                output=True)
-
-start_time = time.time()
-stream.write(output_bytes)
-print("Played sound for {:.2f} seconds".format(time.time() - start_time))
-
-stream.stop_stream()
-stream.close()
-
-p.terminate()
+# basic sine wave generator
+def get_sin_oscillator(freq, amp=1, phase=0, sample_rate=44100):
+    
+    # Convert phase in degrees to radians
+    phase = np.deg2rad(phase % 360)
+    
+    # Calculate the increment between samples by dividing the period by the sample rate
+    increment = 2 * np.pi * freq / sample_rate
+    
+    return (math.sin(phase + v) * amp for v in itertools.count(start=0, step=increment))

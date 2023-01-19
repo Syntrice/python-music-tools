@@ -1,19 +1,16 @@
 from abc import ABC, abstractmethod
 
-class Oscillator(ABC):
+class Oscilator(ABC):
     
-    # Constructor
-    def __init__(self, frequency, phase, amplitude, sample_rate, wave_range):
+    def __init__(self, frequency=440, phase=0, amplitude=1, sample_rate=44100, wave_range=(-1, 1)):
         
-        self._init_frequency, self._frequency = frequency
-        self._init_phase, self._phase = phase
-        self._init_amplitude, self._amplitude = amplitude
-    
-        self.sample_rate = sample_rate
-        self.wave_range = wave_range
+        self._init_frequency = frequency
+        self._init_phase = phase
+        self._init_amplitude = amplitude
+        self._sample_rate = sample_rate
+        self._wave_range = wave_range
+        self.initialize()
         
-    # Initial Properties
-    
     @property
     def init_frequency(self):
         return self._init_frequency
@@ -25,9 +22,7 @@ class Oscillator(ABC):
     @property
     def init_amplitude(self):
         return self._init_amplitude
-    
-    # Frequency
-    
+        
     @property
     def frequency(self):
         return self._frequency
@@ -35,61 +30,41 @@ class Oscillator(ABC):
     @frequency.setter
     def frequency(self, value):
         self._frequency = value
-        self._post_fequency_set()
-    
-    # Phase
-    
+        
     @property
-    def phase(self):
-        return self._phase 
-    
+    def phase(self):    
+        return self._phase
+
     @phase.setter
     def phase(self, value):
         self._phase = value
-        self._post_phase_set()
-    
-    # Amplitude
     
     @property
     def amplitude(self):
         return self._amplitude
-    
+        
     @amplitude.setter
     def amplitude(self, value):
         self._amplitude = value
-        self._post_amplitude_set()
         
-    # Functions that will run after a property is set
+    def initialize(self):
+        self._step = 0 # iterator
+        self.frequency = self.init_frequency
+        self.phase = self.init_phase
+        self.amplitude = self.init_amplitude
         
-    def _post_frequency_set(self):
-        pass
-    
-    def _post_phase_set(self):
-        pass
-    
-    def _post_amplitude_set(self):
-        pass
-    
-    # 
-    
     @abstractmethod
-    def initialize_osc(self):
-        pass
+    def __next__(self):
+        return None
+        
+    def __iter__(self):
+        self.initialize()
+        return self
     
     @staticmethod
     def squish_val(val, min_val=0, max_val=1):
         """
         function to squish a value between a min and max value
         """        
-        return (((val + 1) / 2 ) * (max_val - min_val) ) + min_val 
+        return (((val + 1) / 2 ) * (max_val - min_val) ) + min_val
     
-    @abstractmethod
-    def __next__(self):
-        return None
-    
-    def __iter__(self):
-        self.frequency = self._init_frequency
-        self.phase  = self._init_phase
-        self.amplitude = self._init_amplitude
-        self.initialize_osc()
-        return self

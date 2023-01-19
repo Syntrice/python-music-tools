@@ -1,14 +1,12 @@
-import math
-import numpy as np
-import itertools
+from matplotlib import pyplot as plt
+from python_music_tools.synthesis.oscilator.oscilators import *
 
-# basic sine wave generator
-def get_sin_oscillator(freq, amp=1, phase=0, sample_rate=44100):
-    
-    # Convert phase in degrees to radians
-    phase = np.deg2rad(phase % 360)
-    
-    # Calculate the increment between samples by dividing the period by the sample rate
-    increment = 2 * np.pi * freq / sample_rate
-    
-    return (math.sin(phase + v) * amp for v in itertools.count(start=0, step=increment))
+osc = iter(SquareOscilator(frequency=4, sample_rate=512))
+osc1 = iter(SquareOscilator(frequency=4, sample_rate=512, threshhold=-0.5))
+samples1 = [next(osc) for i in range(512)]
+samples2 = [next(osc1) for i in range(512)]
+x = range(512)
+
+plt.plot(x, samples1, color='red')
+plt.plot(x, samples2, color='blue')
+plt.show()

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import math
 
 class Oscilator(ABC):
     
@@ -30,6 +31,7 @@ class Oscilator(ABC):
     @frequency.setter
     def frequency(self, value):
         self._frequency = value
+        self._step_size = (2 * math.pi * self._frequency) / self._sample_rate
         
     @property
     def phase(self):    
@@ -37,7 +39,7 @@ class Oscilator(ABC):
 
     @phase.setter
     def phase(self, value):
-        self._phase = value
+        self._phase = (value % 360) * math.pi / 180
     
     @property
     def amplitude(self):
